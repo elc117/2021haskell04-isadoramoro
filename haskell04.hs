@@ -22,10 +22,14 @@ classifIdosos' lis = map (\(x, y) -> (x, y, faixaIdoso y)) lis
 -- 4)
 strColor :: (Int,Int,Int) -> String
 strColor (x, y, z) = "rgb(" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ ")"
+--solução prof:
+--strColor (r, g, b) = printf "rgb(%d, %d, %d)" r g b
 
 -- 5)
 genCircs :: Int -> (Int,Int) -> Int -> [(Int,Int,Int)]
-genCircs n (cx, cy) r = [(cx, cy, r) | cx <- (take n (iterate(\x -> x+4)cx)) ]
+genCircs n (cx, cy) r = [(cx, cy, r) | cx <- (take n (iterate(\x -> x+4)cx))]
+--genCircs n (cx, cy) r = take n [(cx, cy, r) | cx <- (iterate (+4) cx)]
 
--- 6)
---genReds :: Int -> [(Int,Int.Int)]
+-- 6) solução prof:
+genReds :: Int -> [(Int,Int,Int)]
+genReds n = [(80+i*10, 0, 0) | i <- [0..n-1]]
