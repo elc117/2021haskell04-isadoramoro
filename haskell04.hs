@@ -20,10 +20,12 @@ classifIdosos' :: [(String,Int)] -> [(String,Int,String)]
 classifIdosos' lis = map (\(x, y) -> (x, y, faixaIdoso y)) lis
 
 -- 4)
---strColor :: (Int,Int,Int) -> String
+strColor :: (Int,Int,Int) -> String
+strColor (x, y, z) = "rgb(" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ ")"
 
 -- 5)
---genCircs :: Int -> (Int,Int) -> Int -> [(Int,Int,Int)]
+genCircs :: Int -> (Int,Int) -> Int -> [(Int,Int,Int)]
+genCircs n (cx, cy) r = [(cx, cy, r) | cx <- (take n (iterate(\x -> x+4)cx)) ]
 
 -- 6)
 --genReds :: Int -> [(Int,Int.Int)]
