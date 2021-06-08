@@ -69,10 +69,10 @@ svgEnd = "</svg>"
 -- Gera string com atributos de estilo para uma dada cor
 -- Atributo mix-blend-mode permite misturar cores
 svgStyle :: (Int,Int,Int) -> String
-svgStyle (r,g,b) = printf "fill:rgb(%d,%d,%d); mix-blend-mode: screen;" r g b
+svgStyle (r,g,b) = printf "rgb(%d,%d,%d); mix-blend-mode: screen;" r g b
 
 svgStyle2 :: (Int,Int,Int,Float) -> String
-svgStyle2 (r,g,b,o) = printf "fill:rgb(%d,%d,%d,%f);" r g b o
+svgStyle2 (r,g,b,o) = printf "rgb(%d,%d,%d,%f)" r g b o
 
 -- Gera strings SVG para uma dada lista de figuras e seus atributos de estilo
 -- Recebe uma função geradora de strings SVG, uma lista de círculos/retângulos e strings de estilo
