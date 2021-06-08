@@ -4,7 +4,6 @@ type Point     = (Float,Float)
 type Rect      = (Point,Float,Float)
 type Circle    = (Point,Float)
 
-
 -------------------------------------------------------------------------------
 -- Paletas
 -------------------------------------------------------------------------------
@@ -12,8 +11,13 @@ type Circle    = (Point,Float)
 -- Paleta (R, G, B) só com tons de verde "hard-coded" 
 -- (pode ser melhorado substituindo os valores literais por parâmetros)
 -- Além disso, o que acontecerá se n for muito grande ou negativo?
+-- são valores inválidos para definição de cor
 greenPalette :: Int -> [(Int,Int,Int)]
-greenPalette n = [(0, 80+i*10, 0) | i <- [0..n] ]
+--greenPalette n = [(0, 80+i*10, 0) | i <- [0..n] ]
+greenPalette n = [(0, i*a, 0) | i <- take n(iterate (+b*c) n)]
+  where a = 3
+        b = 20
+        c = 1
 
 -- Paleta com n valores retirados de uma lista com sequências de R, G e B 
 -- O '$' é uma facilidade sintática que substitui parênteses
@@ -21,17 +25,23 @@ greenPalette n = [(0, 80+i*10, 0) | i <- [0..n] ]
 rgbPalette :: Int -> [(Int,Int,Int)]
 rgbPalette n = take n $ cycle [(255,0,0),(0,255,0),(0,0,255)]
 
-
+newPalette :: Int -> [(Int,Int,Int, Float)]
+newPalette n = [(a+i, a+2*i, a+3*i, 1.0) | i <- take n(iterate (+20) a)]
+  where a = 6
 
 -------------------------------------------------------------------------------
 -- Geração de retângulos em suas posições
 -------------------------------------------------------------------------------
 
 genRectsInLine :: Int -> [Rect]
-genRectsInLine n  = [((m*(w+gap), 0.0), w, h) | m <- [0..fromIntegral (n-1)]]
-  where (w,h) = (50,50)
-        gap = 10
+genRectsInLine n  = [((m*(w+gap), 10.0), w, h) | m <- [0..fromIntegral (n-1)]]
+  where (w,h) = (100,100)
+        gap = 50
 
+genCirclesInLine :: Int -> [Circle]
+genCirclesInLine n  = [((cx, cy), r) | cx <- (take n (iterate (+100) cx))]
+  where (cx,cy) = (100, 100)
+        r = 50
 
 -------------------------------------------------------------------------------
 -- Strings SVG
@@ -42,6 +52,11 @@ genRectsInLine n  = [((m*(w+gap), 0.0), w, h) | m <- [0..fromIntegral (n-1)]]
 svgRect :: Rect -> String -> String 
 svgRect ((x,y),w,h) style = 
   printf "<rect x='%.3f' y='%.3f' width='%.2f' height='%.2f' style='%s' />\n" x y w h style
+
+------------------------------------------------------------------------------
+svgCircle :: Circle -> String -> String
+svgCircle ((cx,cy), r) style =
+  printf "<circle cx='%f' cy='%f' r='%f' fill='%s' />\n" cx cy r style
 
 -- String inicial do SVG
 svgBegin :: Float -> Float -> String
@@ -56,6 +71,9 @@ svgEnd = "</svg>"
 svgStyle :: (Int,Int,Int) -> String
 svgStyle (r,g,b) = printf "fill:rgb(%d,%d,%d); mix-blend-mode: screen;" r g b
 
+svgStyle2 :: (Int,Int,Int,Float) -> String
+svgStyle2 (r,g,b,o) = printf "fill:rgb(%d,%d,%d,%f);" r g b o
+
 -- Gera strings SVG para uma dada lista de figuras e seus atributos de estilo
 -- Recebe uma função geradora de strings SVG, uma lista de círculos/retângulos e strings de estilo
 svgElements :: (a -> String -> String) -> [a] -> [String] -> String
@@ -67,13 +85,19 @@ svgElements func elements styles = concat $ zipWith func elements styles
 
 main :: IO ()
 main = do
+{-
   writeFile "rects.svg" $ svgstrs
   where svgstrs = svgBegin w h ++ svgfigs ++ svgEnd
         svgfigs = svgElements svgRect rects (map svgStyle palette)
         rects = genRectsInLine nrects
-        palette = rgbPalette nrects
+        palette = greenPalette nrects
         nrects = 10
         (w,h) = (1500,500) -- width,height da imagem SVG
-
-
-
+-}
+  writeFile "figs.svg" $ svgstrs
+  where svgstrs = svgBegin w h ++ svgfigs ++ svgEnd
+        svgfigs = svgElements svgCircle circles (map svgStyle2 palette)
+        circles = genCirclesInLine ncircles
+        palette = newPalette ncircles
+        ncircles = 5
+        (w,h) = (1500,500) 
