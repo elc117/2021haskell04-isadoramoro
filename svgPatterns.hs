@@ -11,7 +11,9 @@ type Circle    = (Point,Float)
 -- Paleta (R, G, B) só com tons de verde "hard-coded" 
 -- (pode ser melhorado substituindo os valores literais por parâmetros)
 -- Além disso, o que acontecerá se n for muito grande ou negativo?
--- são valores inválidos para definição de cor
+-- são valores inválidos para definição de cor. Valores negativos serão 
+-- considerados 0 (preto) e os muito grandes serão considerados 255 (branco)
+
 greenPalette :: Int -> [(Int,Int,Int)]
 --greenPalette n = [(0, 80+i*10, 0) | i <- [0..n] ]
 greenPalette n = [(0, i*a, 0) | i <- take n(iterate (+b*c) n)]
